@@ -18,7 +18,7 @@ import CssBaseLine from '@material-ui/core/CssBaseline';
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './config/theme';
 
-//Notitack
+//Notistack
 import { SnackbarProvider } from 'notistack'
 
 function App() {
