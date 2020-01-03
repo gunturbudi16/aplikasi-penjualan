@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 //Import Material UI
 import Button from '@material-ui/core/Button';
@@ -10,8 +11,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { useFirebase } from '../../../components/FirebaseProvider';
 
+// React Router DOM
+import { withRouter } from 'react-router-dom';
 
-function AddDialog() {
+function AddDialog({ history, open, handleClose }) {
 
     const { firestore, user } = useFirebase();
 
@@ -31,7 +34,9 @@ function AddDialog() {
                 throw new Error('Nama Produk wajib diisi');
             }
 
-            await produkCol.add({ nama });
+            const produkBaru = await produkCol.add({ nama });
+
+            history.push(`produk/edit/${produkBaru.id}`);
 
         } catch (e) {
 
@@ -41,7 +46,11 @@ function AddDialog() {
     }
     return (
         <Dialog
-            open={true}>
+            disableBackdropClick={isSubmitting}
+            disableEscapeKeyDown={isSubmitting}
+            open={open}
+            onClose={handleClose}
+        >
             <DialogTitle>Buat Produk Baru</DialogTitle>
             <DialogContent dividers>
                 <TextField
@@ -60,6 +69,7 @@ function AddDialog() {
             <DialogActions>
                 <Button
                     disabled={isSubmitting}
+                    onClick={handleClose}
                 >Batal</Button>
                 <Button
                     color="primary"
@@ -72,4 +82,10 @@ function AddDialog() {
 
 
 }
-export default AddDialog;
+
+AddDialog.propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired
+}
+
+export default withRouter(AddDialog);

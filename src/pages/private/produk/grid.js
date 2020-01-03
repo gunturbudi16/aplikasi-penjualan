@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // Material UI
 import Fab from '@material-ui/core/Fab';
@@ -14,15 +14,26 @@ function GridProduk() {
 
     const classes = useStyles();
 
+    const [openAddDialog, setOpenAddDialog] = useState(false);
+
     return <><h1>Halaman Grid Produk</h1>
         <Fab
             className={classes.fab}
             color="primary"
+            onClick={(e)=>{
+                setOpenAddDialog(true);
+            }}
         >
             <AddIcon />
-
-            <AddDialog />
         </Fab>
+
+        <AddDialog
+            open={openAddDialog}
+            handleClose={()=>{
+                setOpenAddDialog(false);
+            }}
+        />
+
     </>
 
 }
