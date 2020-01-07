@@ -5,6 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import UploadIcon from '@material-ui/icons/CloudUpload';
+import SaveIcon from '@material-ui/icons/Save';
+
 import { useFirebase } from "../../../components/FirebaseProvider";
 import { useDocument } from 'react-firebase-hooks/firestore';
 
@@ -12,6 +15,8 @@ import AppPageLoading from '../../../components/AppPageLoading'
 import { useSnackbar } from "notistack";
 
 import useStyles from './styles/edit';
+
+import { Prompt } from 'react-router-dom';
 
 function EditProduk({ match }) {
 
@@ -41,6 +46,8 @@ function EditProduk({ match }) {
 
     const [isSubmitting, setSubmitting] = useState(false);
 
+    const [isSomethingChange, setSomethingChange] = useState(false);
+
     useEffect(() => {
 
         if (snapshot) {
@@ -60,6 +67,8 @@ function EditProduk({ match }) {
             ...error,
             [e.target.name]: ''
         })
+
+        setSomethingChange(true);
     }
 
     const validate = () => {
@@ -95,6 +104,7 @@ function EditProduk({ match }) {
             try {
                 await produkDoc.set(form, { merge: true });
                 enqueueSnackbar('Data produk berhasil disimpan', { variant: "success" });
+                setSomethingChange(false);
             }
             catch (e) {
 
@@ -149,18 +159,20 @@ function EditProduk({ match }) {
                 }))
                 setSubmitting(true);
                 try {
-                    const fotoExt = file.name.substring(file.name.lastndexOf('.'));
+                    const fotoExt = file.name.substring(file.name.lastIndexOf('.'));
 
                     const fotoRef = produkStorageRef.child(`${match.params.produkId}${fotoExt}`);
 
-                    const fotoSnapshot = await fotoRef.putString(reader.result, 'data_url')
+                    const fotoSnapshot = await fotoRef.putString(reader.result, 'data_url');
 
-                    const fotoUrl = await fotoSnapshot.ref.getDownloadUrl();
+                    const fotoUrl = await fotoSnapshot.ref.getDownloadURL();
 
                     setForm(currentForm => ({
                         ...currentForm,
                         foto: fotoUrl
-                    }))
+                    }));
+
+                    setSomethingChange(true);
                 } catch (e) {
                     setError(error => ({
                         ...error,
@@ -269,13 +281,17 @@ function EditProduk({ match }) {
                             {form.foto &&
                                 <img src={form.foto}
                                     className={classes.previewPhotoProduk}
-                                    alt={`Foto produk ${form.nama}`}
+                                     alt={`Foto produk ${form.nama}`}
                                 />
                             }
                             <Button
+                                disabled={isSubmitting}
                                 variant="outlined"
                                 component="spam"
-                            > Upload Foto Produk
+                            > Upload Foto
+                            <UploadIcon
+                                    className={classes.iconRight}
+                                />
                             </Button>
                         </label>
                         {error.foto &&
@@ -286,17 +302,26 @@ function EditProduk({ match }) {
                     </div>
                 </Grid>
                 <Grid item xs={12} sm={6} >
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        type="submit"
-                        form="produk-form"
-                        disabled={isSubmitting}
-                    >
-                        Simpan
+                    <div className={classes.actionButtons}>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            type="submit"
+                            form="produk-form"
+                            disabled={isSubmitting || !isSomethingChange}
+                        >
+                            <SaveIcon
+                                className={classes.iconLeft}
+                            />
+                            Simpan
                     </Button>
+                    </div>
                 </Grid>
             </Grid>
+            <Prompt 
+                when={isSomethingChange}
+                message="Terdapat perubahan yang belum disimpan, apakah anda yakin ingin meninggalkan halaman ini..?"
+            />
         </div>
     )
 

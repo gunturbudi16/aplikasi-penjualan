@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import useStyles from './styles';
 
-function AppPageLoading() {
+function AppLoading() {
 
     const classes = useStyles();
 
@@ -16,4 +16,4 @@ function AppPageLoading() {
     )
 }
 
-export default AppPageLoading;
+export default AppLoading;
