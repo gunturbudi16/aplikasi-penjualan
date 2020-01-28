@@ -40,6 +40,12 @@ const useStyles = makeStyles(theme => ({
     title: {
         flexGrow: 1,
     },
+    absluteTitle: {
+        position: 'absolute',
+        marginLeft: 400,
+        fontSize: 30,
+        fontFamily: 'comic sans'
+    },
     drawerPaper: {
         position: 'relative',
         whiteSpace: 'nowrap',

@@ -44,7 +44,7 @@ import { useFirebase } from '../../components/FirebaseProvider'
 
 export default function Private() {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
     const { auth } = useFirebase();
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -82,6 +82,9 @@ export default function Private() {
                                 children="Pengaturan" />
                             <Route children="Home" />
                         </Switch>
+                    </Typography>
+                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.absluteTitle}>
+                        Juice Magazine
                     </Typography>
                     <IconButton
                         onClick={handleSignOut}
