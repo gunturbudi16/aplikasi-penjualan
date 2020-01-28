@@ -36,7 +36,7 @@ import format from 'date-fns/format';
 function Home() {
 
     const classes = useStyles();
-    const { auth, firestore, user } = useFirebase();
+    const { firestore, user } = useFirebase();
     const { enqueueSnackbar } = useSnackbar();
     const todayDateString = format(new Date(), 'yyyy-MM-dd');
     const produkCol = firestore.collection(`toko/${user.uid}/produk`);
@@ -235,10 +235,12 @@ function Home() {
                 <Grid item xs={12} md={8}>
                     <Table>
                         <TableHead>
-                            <TableCell>Item</TableCell>
-                            <TableCell>Jumlah</TableCell>
-                            <TableCell>Harga</TableCell>
-                            <TableCell>Subtotal</TableCell>
+                            <TableRow>
+                                <TableCell>Item</TableCell>
+                                <TableCell>Jumlah</TableCell>
+                                <TableCell>Harga</TableCell>
+                                <TableCell>Subtotal</TableCell>
+                            </TableRow>
                         </TableHead>
                         <TableBody>
                             {
